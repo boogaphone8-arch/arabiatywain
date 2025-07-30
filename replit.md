@@ -7,6 +7,8 @@ Arabity Wain is a Flask-based web application designed to help track lost and fo
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
+Designer wants beautiful, modern design with gradients and animations.
+User contact: +249928570921 (phone and WhatsApp)
 
 ## System Architecture
 

@@ -3,8 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>عربيتي وين</title>
+  <title>عربيتي وين - منصة الإبلاغ عن السيارات المسروقة</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <meta name="description" content="منصة شاملة للإبلاغ عن فقدان أو رصد السيارات المسروقة في العالم العربي">
+  <meta name="keywords" content="سيارات مسروقة, بلاغ فقدان, رصد سيارات, استرداد سيارات">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2280%22>🚗</text></svg>">
 </head>
 <body>
   <header class="container">
@@ -37,8 +43,43 @@
     {% block content %}{% endblock %}
   </main>
 
-  <footer class="container muted">
-    <small>© {{ 2025 }} عربيتي وين — نموذج أولي (MVP)</small>
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>🚗 عربيتي وين</h4>
+          <p>منصة متقدمة لاسترداد السيارات المسروقة في العالم العربي</p>
+          <div class="footer-social">
+            <a href="tel:+249928570921" class="social-btn phone">📞</a>
+            <a href="https://wa.me/249928570921" target="_blank" class="social-btn whatsapp">💬</a>
+          </div>
+        </div>
+        <div class="footer-section">
+          <h4>خدماتنا</h4>
+          <ul>
+            <li><a href="{{ url_for('make_report', rtype='lost') }}">بلاغ فقدان</a></li>
+            <li><a href="{{ url_for('make_report', rtype='sighting') }}">بلاغ رصد</a></li>
+            <li><a href="{{ url_for('search') }}">بحث ذكي</a></li>
+            <li><a href="{{ url_for('contact') }}">التواصل</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>معلومات مهمة</h4>
+          <ul>
+            <li>خدمة مجانية 100%</li>
+            <li>حماية الخصوصية</li>
+            <li>وسيط معتمد</li>
+            <li>متاح 24/7</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© {{ 2025 }} عربيتي وين — تطوير متقدم لخدمة المجتمع العربي 🇸🇩</p>
+        <p class="footer-contact">تواصل: +249928570921</p>
+      </div>
+    </div>
   </footer>
+  
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

@@ -110,18 +110,17 @@ def make_report(rtype):
         image_path = save_image(image_file)
 
         # Create new report
-        new_report = Report(
-            report_type=rtype,
-            car_name=car_name,
-            model=model or None,
-            color=color or None,
-            chassis=chassis or None,
-            plate=plate or None,
-            location=location or None,
-            phone=phone,
-            image_path=image_path,
-            notes=notes or None
-        )
+        new_report = Report()
+        new_report.report_type = rtype
+        new_report.car_name = car_name
+        new_report.model = model or None
+        new_report.color = color or None
+        new_report.chassis = chassis or None
+        new_report.plate = plate or None
+        new_report.location = location or None
+        new_report.phone = phone
+        new_report.image_path = image_path
+        new_report.notes = notes or None
         
         db.session.add(new_report)
         db.session.commit()

@@ -1,8 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
-  <section class="admin-header">
-    <h2>لوحة تحكم الوسيط</h2>
-    <p>إدارة البلاغات والتطابقات ومعلومات التواصل</p>
+  <section class="admin-hero">
+    <div class="admin-hero-content">
+      <h2 class="admin-title">⚡ لوحة تحكم الوسيط المتقدمة</h2>
+      <p class="admin-subtitle">إدارة شاملة للبلاغات والتطابقات مع أدوات التواصل المباشر</p>
+      <div class="admin-actions">
+        <a href="tel:+249928570921" class="admin-action-btn phone">📞 اتصال مباشر</a>
+        <a href="https://wa.me/249928570921" target="_blank" class="admin-action-btn whatsapp">💬 واتساب</a>
+        <a href="{{ url_for('search') }}" class="admin-action-btn search">🔍 بحث سريع</a>
+      </div>
+    </div>
   </section>
 
   <section class="card matches-section">

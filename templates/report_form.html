@@ -1,13 +1,25 @@
 {% extends "base.html" %}
 {% block content %}
-  <section class="card">
-    <h2>{{ 'بلاغ فقدان سيارة' if rtype=='lost' else 'بلاغ رصد/اشتباه' }}</h2>
-    
-    {% if rtype == 'lost' %}
-      <p class="info-text">سجّل بلاغ فقدان سيارتك مع أكبر قدر من التفاصيل لتسهيل عملية البحث والمطابقة</p>
-    {% else %}
-      <p class="info-text">سجّل بلاغ رصد لسيارة تشك أنها مسروقة أو مفقودة</p>
-    {% endif %}
+  <section class="report-hero {{ rtype }}">
+    <div class="report-hero-content">
+      <h2 class="report-title">
+        {% if rtype == 'lost' %}
+          🚨 تسجيل بلاغ فقدان سيارة
+        {% else %}
+          👁️ تسجيل بلاغ رصد مشتبه
+        {% endif %}
+      </h2>
+      <p class="report-subtitle">
+        {% if rtype == 'lost' %}
+          سجّل بلاغ فقدان سيارتك مع التفاصيل الدقيقة لضمان أفضل فرص الاسترداد
+        {% else %}
+          ساعد في استرداد السيارات بالإبلاغ عن أي سيارة مشتبه بها
+        {% endif %}
+      </p>
+    </div>
+  </section>
+
+  <section class="card report-section">
     
     <form method="post" enctype="multipart/form-data" class="report-form">
       <div class="form-row">

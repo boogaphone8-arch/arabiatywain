@@ -74,11 +74,10 @@ def find_matches_for(report: Report):
         ).first()
         
         if not exists:
-            new_match = Match(
-                lost_id=lost_id, 
-                sighting_id=sighting_id, 
-                rule=rule
-            )
+            new_match = Match()
+            new_match.lost_id = lost_id
+            new_match.sighting_id = sighting_id
+            new_match.rule = rule
             db.session.add(new_match)
     
     if matches:

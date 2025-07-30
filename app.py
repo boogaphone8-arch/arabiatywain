@@ -31,7 +31,7 @@ app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
 }
 
 # File upload configuration
-UPLOAD_FOLDER = os.path.join(app.static_folder, "uploads")
+UPLOAD_FOLDER = os.path.join(app.static_folder or "static", "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024  # 5MB
@@ -40,9 +40,9 @@ app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024  # 5MB
 db.init_app(app)
 
 # Application constants
-ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "admin123")
-OWNER_PHONE = os.environ.get("OWNER_PHONE", "")
-OWNER_WHATSAPP = os.environ.get("OWNER_WHATSAPP", "")
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "ArabityWain@2025")
+OWNER_PHONE = os.environ.get("OWNER_PHONE", "+249928570921")
+OWNER_WHATSAPP = os.environ.get("OWNER_WHATSAPP", "249928570921")
 
 with app.app_context():
     # Import models to ensure tables are created

@@ -1,8 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
+  <section class="contact-hero">
+    <div class="contact-hero-content">
+      <h2 class="contact-title">📞 تواصل مع الوسيط المعتمد</h2>
+      <p class="contact-subtitle">نحن هنا لخدمتك على مدار الساعة لضمان استرداد سيارتك بأمان</p>
+    </div>
+  </section>
+
   <section class="card contact-section">
-    <h2>التواصل مع الوسيط</h2>
-    <p>الوسيط هو الشخص المسؤول عن ربط أصحاب البلاغات وتسهيل عملية استرداد السيارات بأمان</p>
     
     <div class="contact-info">
       {% if owner_phone or owner_whatsapp %}
