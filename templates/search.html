@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="card">
+    <h2>بحث عن سيارة</h2>
+    <p>ابحث عن سيارة باللوحة أو الشاسي لمعرفة إذا كانت مرفوعة ببلاغ فقدان أو يوجد تطابق</p>
+    
+    <form method="post" class="search-form">
+      <div class="search-options">
+        <label>ابحث باستخدام:
+          <select name="mode">
+            <option value="plate" {% if mode=='plate' %}selected{% endif %}>رقم اللوحة</option>
+            <option value="chassis" {% if mode=='chassis' %}selected{% endif %}>رقم الشاسي</option>
+          </select>
+        </label>
+        
+        <label>القيمة
+          <input name="value" placeholder="أدخل رقم اللوحة أو الشاسي" value="{{ query_value or '' }}" required>
+        </label>
+      </div>
+      
+      <button type="submit" class="search-button">🔍 بحث</button>
+    </form>
+  </section>
+
+  {% if status %}
+    <section class="results-section">
+      {% if status == 'matched' %}
+        <div class="alert alert-warning">
+          <h3>⚠️ تطابق موجود: يوجد تطابق بين بلاغ فقدان وبلاغ رصد</h3>
+          <p>تم العثور على تطابق بين بلاغ فقدان وبلاغ رصد لهذه السيارة. لإتمام التواصل بين الطرفين:</p>
+          <a href="{{ url_for('contact') }}" class="contact-button">تواصل مع الوسيط فوراً</a>
+        </div>
+        
+        <div class="matches-container">
+          {% for row in results %}
+            <div class="match-card">
+              <div class="match-header">
+                <span class="match-type">
+                  {{ 'تطابق برقم اللوحة' if row.rule=='plate' else 'تطابق برقم الشاسي' }}
+                </span>
+              </div>
+              
+              <div class="match-details">
+                <div class="report-side lost">
+                  <h4>📋 بلاغ الفقدان</h4>
+                  <div class="car-info">
+                    <p><strong>السيارة:</strong> {{ row.lost.car_name }} 
+                      {% if row.lost.model %}{{ row.lost.model }}{% endif %}
+                      {% if row.lost.color %}- {{ row.lost.color }}{% endif %}
+                    </p>
+                    {% if row.lost.plate %}<p><strong>اللوحة:</strong> {{ row.lost.plate }}</p>{% endif %}
+                    {% if row.lost.chassis %}<p><strong>الشاسي:</strong> {{ row.lost.chassis }}</p>{% endif %}
+                    {% if row.lost.location %}<p><strong>الموقع:</strong> {{ row.lost.location }}</p>{% endif %}
+                    {% if row.lost.notes %}<p><strong>ملاحظات:</strong> {{ row.lost.notes }}</p>{% endif %}
+                  </div>
+                  {% if row.lost.image_path %}
+                    <img src="{{ url_for('static', filename=row.lost.image_path) }}" alt="صورة السيارة المفقودة" class="car-image">
+                  {% endif %}
+                </div>
+                
+                <div class="vs-divider">⟷</div>
+                
+                <div class="report-side sighting">
+                  <h4>👁️ بلاغ الرصد</h4>
+                  <div class="car-info">
+                    <p><strong>السيارة:</strong> {{ row.sighting.car_name }} 
+                      {% if row.sighting.model %}{{ row.sighting.model }}{% endif %}
+                      {% if row.sighting.color %}- {{ row.sighting.color }}{% endif %}
+                    </p>
+                    {% if row.sighting.plate %}<p><strong>اللوحة:</strong> {{ row.sighting.plate }}</p>{% endif %}
+                    {% if row.sighting.chassis %}<p><strong>الشاسي:</strong> {{ row.sighting.chassis }}</p>{% endif %}
+                    {% if row.sighting.location %}<p><strong>الموقع:</strong> {{ row.sighting.location }}</p>{% endif %}
+                    {% if row.sighting.notes %}<p><strong>ملاحظات:</strong> {{ row.sighting.notes }}</p>{% endif %}
+                  </div>
+                  {% if row.sighting.image_path %}
+                    <img src="{{ url_for('static', filename=row.sighting.image_path) }}" alt="صورة السيارة المرصودة" class="car-image">
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        
+      {% elif status == 'raised' %}
+        <div class="alert alert-danger">
+          <h3>🚨 السيارة مرفوعة ببلاغ فقدان</h3>
+          <p>هذه السيارة مسجلة في النظام كسيارة مفقودة/مسروقة.</p>
+          
+          <div class="action-buttons">
+            <a href="{{ url_for('make_report', rtype='sighting') }}" class="button primary">
+              سجّل بلاغ رصد إذا رأيتها
+            </a>
+            <a href="{{ url_for('contact') }}" class="button secondary">
+              تواصل مع الوسيط
+            </a>
+          </div>
+          
+          <div class="warning-text">
+            <p><strong>تحذير:</strong> إذا كنت تحاول شراء هذه السيارة، يُنصح بشدة عدم المتابعة والإبلاغ عن الموقع للوسيط.</p>
+          </div>
+        </div>
+        
+      {% else %}
+        <div class="alert alert-success">
+          <h3>✅ لا توجد بلاغات مطابقة حالياً</h3>
+          <p>لم يتم العثور على أي بلاغات فقدان أو رصد مطابقة لهذه البيانات في الوقت الحالي.</p>
+          
+          <div class="suggestion-box">
+            <p>تريد تسجيل بلاغ لهذه السيارة؟</p>
+            <div class="action-buttons">
+              <a href="{{ url_for('make_report', rtype='lost') }}" class="button">
+                بلاغ فقدان
+              </a>
+              <a href="{{ url_for('make_report', rtype='sighting') }}" class="button">
+                بلاغ رصد
+              </a>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </section>
+  {% endif %}
+{% endblock %}

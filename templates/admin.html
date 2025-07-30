@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="admin-header">
+    <h2>لوحة تحكم الوسيط</h2>
+    <p>إدارة البلاغات والتطابقات ومعلومات التواصل</p>
+  </section>
+
+  <section class="card matches-section">
+    <h3>🔄 آخر التطابقات (تحتاج متابعة)</h3>
+    {% if matches %}
+      <div class="matches-grid">
+        {% for row in matches %}
+          <div class="match-admin-card">
+            <div class="match-header">
+              <span class="match-type-badge">
+                {{ 'تطابق باللوحة' if row.m.rule=='plate' else 'تطابق بالشاسي' }}
+              </span>
+              <span class="match-date">{{ row.m.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+            </div>
+            
+            <div class="match-content">
+              <div class="lost-section">
+                <h4>📋 صاحب الفقدان</h4>
+                <div class="car-details">
+                  <p><strong>السيارة:</strong> {{ row.lost.car_name }} {{ row.lost.model or '' }} {{ row.lost.color or '' }}</p>
+                  {% if row.lost.plate %}<p><strong>اللوحة:</strong> {{ row.lost.plate }}</p>{% endif %}
+                  {% if row.lost.chassis %}<p><strong>الشاسي:</strong> {{ row.lost.chassis }}</p>{% endif %}
+                  {% if row.lost.location %}<p><strong>الموقع:</strong> {{ row.lost.location }}</p>{% endif %}
+                </div>
+                <div class="contact-info">
+                  <p class="phone">📞 <strong>{{ row.lost.phone }}</strong></p>
+                  <a href="tel:{{ row.lost.phone }}" class="contact-button">اتصال</a>
+                  {% if row.lost.phone.startswith('+') %}
+                    <a href="https://wa.me/{{ row.lost.phone[1:] }}" target="_blank" class="whatsapp-button">واتساب</a>
+                  {% endif %}
+                </div>
+                {% if row.lost.image_path %}
+                  <img src="{{ url_for('static', filename=row.lost.image_path) }}" alt="صورة السيارة المفقودة" class="admin-car-image">
+                {% endif %}
+              </div>
+              
+              <div class="divider">⟷</div>
+              
+              <div class="sighting-section">
+                <h4>👁️ صاحب الرصد</h4>
+                <div class="car-details">
+                  <p><strong>السيارة:</strong> {{ row.sighting.car_name }} {{ row.sighting.model or '' }} {{ row.sighting.color or '' }}</p>
+                  {% if row.sighting.plate %}<p><strong>اللوحة:</strong> {{ row.sighting.plate }}</p>{% endif %}
+                  {% if row.sighting.chassis %}<p><strong>الشاسي:</strong> {{ row.sighting.chassis }}</p>{% endif %}
+                  {% if row.sighting.location %}<p><strong>الموقع:</strong> {{ row.sighting.location }}</p>{% endif %}
+                </div>
+                <div class="contact-info">
+                  <p class="phone">📞 <strong>{{ row.sighting.phone }}</strong></p>
+                  <a href="tel:{{ row.sighting.phone }}" class="contact-button">اتصال</a>
+                  {% if row.sighting.phone.startswith('+') %}
+                    <a href="https://wa.me/{{ row.sighting.phone[1:] }}" target="_blank" class="whatsapp-button">واتساب</a>
+                  {% endif %}
+                </div>
+                {% if row.sighting.image_path %}
+                  <img src="{{ url_for('static', filename=row.sighting.image_path) }}" alt="صورة السيارة المرصودة" class="admin-car-image">
+                {% endif %}
+              </div>
+            </div>
+            
+            {% if row.lost.notes or row.sighting.notes %}
+              <div class="notes-section">
+                {% if row.lost.notes %}
+                  <p><strong>ملاحظات الفقدان:</strong> {{ row.lost.notes }}</p>
+                {% endif %}
+                {% if row.sighting.notes %}
+                  <p><strong>ملاحظات الرصد:</strong> {{ row.sighting.notes }}</p>
+                {% endif %}
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="no-matches">
+        <p class="muted">لا توجد تطابقات بعد. ستظهر هنا عند حدوث تطابق بين بلاغات الفقدان والرصد.</p>
+      </div>
+    {% endif %}
+  </section>
+
+  <section class="card reports-section">
+    <h3>📊 أحدث البلاغات</h3>
+    {% if reports %}
+      <div class="table-container">
+        <table class="reports-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>النوع</th>
+              <th>السيارة</th>
+              <th>اللوحة</th>
+              <th>الشاسي</th>
+              <th>الموقع</th>
+              <th>الهاتف</th>
+              <th>صورة</th>
+              <th>التاريخ</th>
+              <th>حالة</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for r in reports %}
+              <tr class="report-row {{ r.report_type }}">
+                <td>{{ r.id }}</td>
+                <td>
+                  <span class="report-type-badge {{ r.report_type }}">
+                    {{ 'فقدان' if r.report_type=='lost' else 'رصد' }}
+                  </span>
+                </td>
+                <td>
+                  <div class="car-summary">
+                    <strong>{{ r.car_name }}</strong>
+                    {% if r.model %}<br><small>{{ r.model }}</small>{% endif %}
+                    {% if r.color %}<br><small>{{ r.color }}</small>{% endif %}
+                  </div>
+                </td>
+                <td>{{ r.plate or '-' }}</td>
+                <td>{{ r.chassis or '-' }}</td>
+                <td>{{ r.location or '-' }}</td>
+                <td>
+                  <div class="phone-actions">
+                    <span class="phone-number">{{ r.phone }}</span>
+                    <div class="contact-actions">
+                      <a href="tel:{{ r.phone }}" class="mini-button">📞</a>
+                      {% if r.phone.startswith('+') %}
+                        <a href="https://wa.me/{{ r.phone[1:] }}" target="_blank" class="mini-button">💬</a>
+                      {% endif %}
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  {% if r.image_path %}
+                    <img src="{{ url_for('static', filename=r.image_path) }}" alt="صورة السيارة" class="table-image">
+                  {% else %}
+                    <span class="no-image">-</span>
+                  {% endif %}
+                </td>
+                <td>{{ r.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>
+                  <span class="status-badge {{ 'active' if r.is_active else 'inactive' }}">
+                    {{ 'نشط' if r.is_active else 'غير نشط' }}
+                  </span>
+                </td>
+              </tr>
+              {% if r.notes %}
+                <tr class="notes-row">
+                  <td colspan="10">
+                    <small><strong>ملاحظات:</strong> {{ r.notes }}</small>
+                  </td>
+                </tr>
+              {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="no-reports">
+        <p class="muted">لا توجد بلاغات بعد. ستظهر هنا عند تسجيل أول بلاغ.</p>
+      </div>
+    {% endif %}
+  </section>
+
+  <section class="card stats-section">
+    <h3>📈 إحصائيات سريعة</h3>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number">{{ reports | selectattr('report_type', 'equalto', 'lost') | list | length }}</div>
+        <div class="stat-label">بلاغات فقدان</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">{{ reports | selectattr('report_type', 'equalto', 'sighting') | list | length }}</div>
+        <div class="stat-label">بلاغات رصد</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">{{ matches | length }}</div>
+        <div class="stat-label">تطابقات</div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

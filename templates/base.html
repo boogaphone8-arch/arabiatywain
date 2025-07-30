@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>عربيتي وين</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <header class="container">
+    <h1>🚗 عربيتي وين</h1>
+    <nav>
+      <a href="{{ url_for('home') }}">الرئيسية</a>
+      <a href="{{ url_for('make_report', rtype='lost') }}">بلاغ فقدان</a>
+      <a href="{{ url_for('make_report', rtype='sighting') }}">بلاغ رصد/اشتباه</a>
+      <a href="{{ url_for('search') }}">بحث</a>
+      <a href="{{ url_for('contact') }}">تواصل مع الوسيط</a>
+      {% if session.get('is_admin') %}
+        <a href="{{ url_for('admin_dashboard') }}">لوحة الوسيط</a>
+        <a href="{{ url_for('admin_logout') }}">تسجيل خروج</a>
+      {% else %}
+        <a href="{{ url_for('admin_login') }}">وسيط</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  <main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class="flash">
+          {% for category, msg in messages %}
+            <li class="{{ category }}">{{ msg }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="container muted">
+    <small>© {{ 2025 }} عربيتي وين — نموذج أولي (MVP)</small>
+  </footer>
+</body>
+</html>

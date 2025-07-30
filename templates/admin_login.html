@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="card login-section">
+    <h2>تسجيل دخول الوسيط</h2>
+    <p>لوحة التحكم الخاصة بالوسيط لإدارة البلاغات والتطابقات</p>
+    
+    <form method="post" class="login-form">
+      <label class="required">كلمة المرور
+        <input type="password" name="password" placeholder="أدخل كلمة مرور الوسيط" required>
+      </label>
+      
+      <button type="submit" class="login-button">دخول لوحة التحكم</button>
+    </form>
+    
+    <div class="login-help">
+      <p class="muted">
+        كلمة المرور مُعرَّفة في متغيرات البيئة (ADMIN_PASSWORD). 
+        تأكد من تغييرها إلى كلمة مرور قوية في الإنتاج.
+      </p>
+    </div>
+  </section>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="card">
+    <h2>{{ 'بلاغ فقدان سيارة' if rtype=='lost' else 'بلاغ رصد/اشتباه' }}</h2>
+    
+    {% if rtype == 'lost' %}
+      <p class="info-text">سجّل بلاغ فقدان سيارتك مع أكبر قدر من التفاصيل لتسهيل عملية البحث والمطابقة</p>
+    {% else %}
+      <p class="info-text">سجّل بلاغ رصد لسيارة تشك أنها مسروقة أو مفقودة</p>
+    {% endif %}
+    
+    <form method="post" enctype="multipart/form-data" class="report-form">
+      <div class="form-row">
+        <label class="required">اسم العربية/الشركة*
+          <input name="car_name" placeholder="مثال: تويوتا، نيسان، هيونداي" required>
+        </label>
+        
+        <label>الموديل
+          <input name="model" placeholder="مثال: كامري، صني، إلنترا">
+        </label>
+      </div>
+      
+      <div class="form-row">
+        <label>اللون
+          <input name="color" placeholder="مثال: أبيض، أزرق، رمادي">
+        </label>
+        
+        <label>الموقع/المدينة
+          <input name="location" placeholder="مثال: الرياض، القاهرة، الدار البيضاء">
+        </label>
+      </div>
+      
+      <div class="form-row">
+        <label class="important">رقم الشاسي (مهم جداً)
+          <input name="chassis" placeholder="مثال: JTDBR32E123456789">
+          <small>رقم الشاسي هو الأكثر دقة في التطابق</small>
+        </label>
+        
+        <label class="important">رقم اللوحة
+          <input name="plate" placeholder="مثال: أ ب ج 1234">
+          <small>أدخل اللوحة كما هي، النظام سينسقها تلقائياً</small>
+        </label>
+      </div>
+      
+      <label>صورة العربية (اختياري)
+        <input type="file" name="image" accept="image/*">
+        <small>الحد الأقصى 5 ميجابايت - PNG, JPG, JPEG, WEBP</small>
+      </label>
+      
+      <label>ملاحظات إضافية
+        <textarea name="notes" rows="3" placeholder="أي معلومات إضافية مثل الملصقات المميزة، الكسور، التعديلات..."></textarea>
+      </label>
+      
+      <label class="required">رقم الهاتف (للتواصل عبر الوسيط)*
+        <input name="phone" type="tel" placeholder="مثال: +966501234567" required>
+        <small>سيتم استخدامه للتواصل معك عبر الوسيط فقط</small>
+      </label>
+      
+      <div class="form-actions">
+        <button type="submit" class="primary-button">
+          {{ 'تسجيل بلاغ الفقدان' if rtype=='lost' else 'تسجيل بلاغ الرصد' }}
+        </button>
+        <a href="{{ url_for('home') }}" class="secondary-button">إلغاء</a>
+      </div>
+    </form>
+    
+    <div class="help-section">
+      <h3>نصائح مهمة:</h3>
+      <ul>
+        <li>كلما زادت التفاصيل، زادت دقة المطابقة</li>
+        <li>رقم الشاسي هو الأكثر أهمية وأماناً للمطابقة</li>
+        <li>الصور تساعد في التأكد من هوية السيارة</li>
+        <li>بياناتك محمية ولن تظهر للعامة</li>
+      </ul>
+    </div>
+  </section>
+{% endblock %}
