@@ -9,8 +9,20 @@ def is_admin() -> bool:
 
 @app.route("/")
 def home():
-    """Home page"""
-    return render_template("index.html")
+    """Home page with statistics"""
+    # Get statistics
+    total_lost = Report.query.filter_by(report_type="lost", is_active=True).count()
+    total_sightings = Report.query.filter_by(report_type="sighting", is_active=True).count()
+    total_matches = Match.query.count()
+    
+    stats = {
+        'lost_reports': total_lost,
+        'sighting_reports': total_sightings,
+        'total_reports': total_lost + total_sightings,
+        'matches_found': total_matches
+    }
+    
+    return render_template("index.html", stats=stats)
 
 @app.route("/contact")
 def contact():
@@ -73,7 +85,9 @@ def search():
                 results.append({
                     "rule": m.rule, 
                     "lost": lost_r, 
-                    "sighting": sight_r
+                    "sighting": sight_r,
+                    "mediator_phone": OWNER_PHONE,
+                    "mediator_whatsapp": OWNER_WHATSAPP
                 })
 
     return render_template(

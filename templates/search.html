@@ -31,9 +31,23 @@
     <section class="results-section">
       {% if status == 'matched' %}
         <div class="alert alert-warning">
-          <h3>⚠️ تطابق موجود: يوجد تطابق بين بلاغ فقدان وبلاغ رصد</h3>
-          <p>تم العثور على تطابق بين بلاغ فقدان وبلاغ رصد لهذه السيارة. لإتمام التواصل بين الطرفين:</p>
-          <a href="{{ url_for('contact') }}" class="contact-button">تواصل مع الوسيط فوراً</a>
+          <h3>🎯 تطابق موجود: يوجد تطابق بين بلاغ فقدان وبلاغ رصد</h3>
+          <p>تم العثور على تطابق بين بلاغ فقدان وبلاغ رصد لهذه السيارة. للتواصل بين الطرفين:</p>
+          
+          <div class="mediator-contact">
+            <h4>🤝 تواصل مع الوسيط مباشرة:</h4>
+            <div class="contact-options">
+              <a href="tel:{{ results[0].mediator_phone }}" class="contact-btn phone-btn">
+                📞 {{ results[0].mediator_phone }}
+              </a>
+              <a href="https://wa.me/{{ results[0].mediator_whatsapp.replace('+', '') }}" target="_blank" class="contact-btn whatsapp-btn">
+                💬 واتساب
+              </a>
+            </div>
+            <p class="contact-note">
+              <strong>ملاحظة:</strong> الوسيط سيقوم بتسهيل التواصل بين المبلغ والراصد بشكل آمن ومحمي.
+            </p>
+          </div>
         </div>
         
         <div class="matches-container">

@@ -6,16 +6,24 @@
       <p class="hero-subtitle">منصة شاملة وآمنة للإبلاغ عن فقدان أو رصد السيارات المسروقة في العالم العربي</p>
       <div class="hero-stats">
         <div class="stat-item">
-          <div class="stat-icon">🔍</div>
-          <div class="stat-text">بحث فوري وذكي</div>
+          <div class="stat-icon">📊</div>
+          <div class="stat-number">{{ stats.total_reports if stats else 0 }}</div>
+          <div class="stat-text">إجمالي البلاغات</div>
         </div>
-        <div class="stat-item">
-          <div class="stat-icon">🤝</div>
-          <div class="stat-text">وسيط آمن</div>
+        <div class="stat-item lost">
+          <div class="stat-icon">🚨</div>
+          <div class="stat-number">{{ stats.lost_reports if stats else 0 }}</div>
+          <div class="stat-text">بلاغات فقدان</div>
         </div>
-        <div class="stat-item">
-          <div class="stat-icon">📱</div>
-          <div class="stat-text">تواصل مباشر</div>
+        <div class="stat-item sighting">
+          <div class="stat-icon">👀</div>
+          <div class="stat-number">{{ stats.sighting_reports if stats else 0 }}</div>
+          <div class="stat-text">بلاغات رصد</div>
+        </div>
+        <div class="stat-item matched">
+          <div class="stat-icon">🎯</div>
+          <div class="stat-number">{{ stats.matches_found if stats else 0 }}</div>
+          <div class="stat-text">تطابقات نجحت</div>
         </div>
       </div>
     </div>
