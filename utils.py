@@ -84,3 +84,98 @@ def find_matches_for(report: Report):
         db.session.commit()
     
     return matches
+
+def process_bulk_data(bulk_data):
+    """Process bulk import data and create reports"""
+    from models import Report
+    
+    lines = bulk_data.strip().split('\n')
+    results = {
+        'success': 0,
+        'errors': [],
+        'matches': 0
+    }
+    
+    for line_num, line in enumerate(lines, 1):
+        if not line.strip():
+            continue
+        
+        try:
+            # Split by comma and clean up
+            parts = [part.strip() for part in line.split(',')]
+            
+            if len(parts) < 8:
+                results['errors'].append({
+                    'line': line_num,
+                    'message': f'بيانات ناقصة. يجب أن يكون هناك 8 حقول على الأقل، وجد {len(parts)}'
+                })
+                continue
+            
+            # Parse fields
+            report_type = parts[0].strip()
+            car_name = parts[1].strip()
+            model = parts[2].strip() if parts[2].strip() else None
+            color = parts[3].strip() if parts[3].strip() else None
+            plate = parts[4].strip() if parts[4].strip() else None
+            chassis = parts[5].strip() if parts[5].strip() else None
+            location = parts[6].strip() if parts[6].strip() else None
+            phone = parts[7].strip()
+            notes = parts[8].strip() if len(parts) > 8 and parts[8].strip() else None
+            
+            # Validate report type
+            if report_type not in ['فقدان', 'رصد', 'lost', 'sighting']:
+                results['errors'].append({
+                    'line': line_num,
+                    'message': 'نوع البلاغ يجب أن يكون "فقدان" أو "رصد"'
+                })
+                continue
+            
+            # Normalize report type
+            if report_type in ['فقدان', 'lost']:
+                report_type = 'lost'
+            else:
+                report_type = 'sighting'
+            
+            # Validate required fields
+            if not car_name or not phone:
+                results['errors'].append({
+                    'line': line_num,
+                    'message': 'اسم السيارة ورقم الهاتف مطلوبان'
+                })
+                continue
+            
+            if not plate and not chassis:
+                results['errors'].append({
+                    'line': line_num,
+                    'message': 'يجب توفر رقم اللوحة أو رقم الشاسي على الأقل'
+                })
+                continue
+            
+            # Create new report
+            new_report = Report()
+            new_report.report_type = report_type
+            new_report.car_name = car_name
+            new_report.model = model
+            new_report.color = color
+            new_report.chassis = chassis
+            new_report.plate = plate
+            new_report.location = location
+            new_report.phone = phone
+            new_report.notes = notes
+            new_report.image_path = None  # No image in bulk import
+            
+            db.session.add(new_report)
+            db.session.commit()
+            
+            # Find matches
+            matches_found = find_matches_for(new_report)
+            results['matches'] += len(matches_found) if matches_found else 0
+            results['success'] += 1
+            
+        except Exception as e:
+            results['errors'].append({
+                'line': line_num,
+                'message': f'خطأ في معالجة البيانات: {str(e)}'
+            })
+    
+    return results

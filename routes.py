@@ -186,3 +186,22 @@ def admin_dashboard():
         reports=latest_reports, 
         matches=matches_view
     )
+
+@app.route("/admin/bulk-import", methods=["GET", "POST"])
+def bulk_import():
+    """Bulk import reports from text data"""
+    if not is_admin():
+        return redirect(url_for("admin_login"))
+    
+    if request.method == "POST":
+        bulk_data = request.form.get("bulk_data", "").strip()
+        
+        if not bulk_data:
+            flash("يرجى إدخال البيانات", "warning")
+            return render_template("bulk_import.html")
+        
+        from utils import process_bulk_data
+        results = process_bulk_data(bulk_data)
+        return render_template("bulk_import.html", results=results)
+    
+    return render_template("bulk_import.html")
