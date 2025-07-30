@@ -40,7 +40,7 @@ app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024  # 5MB
 db.init_app(app)
 
 # Application constants
-ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "ArabityWain@2025")
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "00470481")
 OWNER_PHONE = os.environ.get("OWNER_PHONE", "+249928570921")
 OWNER_WHATSAPP = os.environ.get("OWNER_WHATSAPP", "249928570921")
 
